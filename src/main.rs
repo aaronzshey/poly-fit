@@ -1,7 +1,7 @@
 use nalgebra::DMatrix;
 
 fn main() {
-    let q: Vec<i32> = vec![1, 8, 27, 64,125];
+    let q: Vec<i32> = vec![1, 8, 27, 64, 125];
     let mut prev = diff(&q);
     let mut next = diff(&q);
 
@@ -27,7 +27,6 @@ fn main() {
         .collect::<Vec<_>>();
     let mt = DMatrix::from_vec(degree as usize, degree as usize, vals);
     println!("{}", mt);
-    
 }
 
 fn vec_homogeneous(v: &Vec<i32>) -> bool {
