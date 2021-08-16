@@ -2,6 +2,7 @@ use nalgebra::DMatrix;
 
 fn main() {
     let q: Vec<i32> = vec![1, 8, 27, 64, 125];
+
     let mut prev = diff(&q);
     let mut next = diff(&q);
 
@@ -19,7 +20,11 @@ fn main() {
         j += 1;
     };
 
-    println!("{}", degree);
+    println!("function degree is {}", degree);
+
+
+    //augment with this 
+    println!("{:?}", &q[0..degree]);
 
     let vals = (1..=degree as i32)
         .flat_map(|x: i32| (1..=degree).map(move |y| y.pow(x as u32)))
@@ -27,6 +32,9 @@ fn main() {
         .collect::<Vec<_>>();
     let mt = DMatrix::from_vec(degree as usize, degree as usize, vals);
     println!("{}", mt);
+    println!("{}", mt[(0,0)]);
+
+    rref(mt);
 }
 
 fn vec_homogeneous(v: &Vec<i32>) -> bool {
@@ -40,5 +48,36 @@ fn diff(v: &Vec<i32>) -> Vec<i32> {
         .enumerate()
         .map(|x| x.1 - v[x.0])
         .collect::<Vec<_>>();
-    //return Vec::from([1,2]);
+}
+
+
+fn rref(mtx: DMatrix<f32>) -> () {
+    let lead = 0;
+    let row_count = mtx.nrows();
+    let column_count = mtx.ncols();
+
+    for r in 0..row_count {
+        if column_count <= lead {
+            return;
+        }
+
+        let i = r;
+
+        while mtx[(i, lead)] == 0 {
+            i += 1;
+
+            if row_count == i {
+                let i = r;
+                if column_count == lead {
+                    return;
+                }
+            }
+
+        }
+
+        //swap rows i and r?
+
+        
+
+    }
 }
