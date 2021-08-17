@@ -26,15 +26,21 @@ fn main() {
     //augment with this 
     println!("{:?}", &q[0..degree]);
 
+    //build matrix to solve
     let vals = (1..=degree as i32)
         .flat_map(|x: i32| (1..=degree).map(move |y| y.pow(x as u32)))
         .map(|x| x as f32)
         .collect::<Vec<_>>();
     let mt = DMatrix::from_vec(degree as usize, degree as usize, vals);
+    
     println!("{}", mt);
     println!("{}", mt[(0,0)]);
 
-    rref(mt);
+    //rref(mt);
+
+    
+
+
 }
 
 fn vec_homogeneous(v: &Vec<i32>) -> bool {
@@ -51,30 +57,37 @@ fn diff(v: &Vec<i32>) -> Vec<i32> {
 }
 
 
-fn rref(mtx: DMatrix<f32>) -> () {
+fn rref(mut mtx: DMatrix<f32>) -> () {
+
+    //declare a new matrix to operate on
+    //the old matrix is left unchanged
+
+    let result = &mut mtx;
+
+
     let lead = 0;
-    let row_count = mtx.nrows();
-    let column_count = mtx.ncols();
+    let row_count = result.nrows();
+    let column_count = result.ncols();
 
     for r in 0..row_count {
         if column_count <= lead {
             return;
         }
 
-        let i = r;
+        let mut i = r;
 
-        while mtx[(i, lead)] == 0 {
+        while result[(i, lead)] == 0.0 {
             i += 1;
 
             if row_count == i {
-                let i = r;
+                i = r;
                 if column_count == lead {
                     return;
                 }
             }
 
         }
-
+        //std::mem::swap(result.row(i), result.row(r))
         //swap rows i and r?
 
         
