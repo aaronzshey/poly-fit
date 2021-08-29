@@ -53,7 +53,7 @@ fn diff(v: &Vec<i32>) -> Vec<i32> {
         .collect::<Vec<_>>();
 }
 
-fn rref(mut mtx: DMatrix<f32>) -> () {
+fn rref(mut mtx: DMatrix<f32>) -> &'static&'static mut DMatrix<f32> {
     //declare a new matrix to operate on
     //the old matrix is left unchanged
 
@@ -106,5 +106,5 @@ fn rref(mut mtx: DMatrix<f32>) -> () {
         lead += 1
     }
 
-    result;
+    return &result;
 }
