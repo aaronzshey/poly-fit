@@ -32,12 +32,8 @@ fn main() {
     let mt = DMatrix::from_vec(degree as usize, degree as usize, vals);
 
     println!("{}", mt);
-    println!("{}", mt[(0, 0)]);
-
   
-    println!("{:?}", rref(&mt));
-
-    //rref(mt);
+    println!("{:?}", rref(& mutmt));
 }
 
 fn vec_homogeneous(v: &Vec<i32>) -> bool {
@@ -54,9 +50,7 @@ fn diff(v: &Vec<i32>) -> Vec<i32> {
 }
 
 fn rref(matrix: &DMatrix<f32>) -> &DMatrix<f32> {
-    let mut aab = matrix;
-    let mut b = &mut aab;
-    let mut matrix_out: &mut DMatrix<f32> = b;
+    let matrix_out = matrix;
     let mut pivot = 0;
     let row_count = matrix_out.nrows();
     let column_count = matrix_out.ncols();
