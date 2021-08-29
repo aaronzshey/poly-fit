@@ -1,7 +1,7 @@
 use nalgebra::DMatrix;
 
 fn main() {
-    let q: Vec<i32> = vec![1, 8, 27, 64, 125];
+    let q: Vec<f32> = vec![1.0, 8.0, 27.0, 64.0, 125.0];
 
     let mut prev = diff(&q);
     let mut next = diff(&q);
@@ -25,23 +25,26 @@ fn main() {
     println!("{:?}", &q[0..degree]);
 
     //build matrix to solve
-    let vals = (1..=degree as i32)
+    let mut vals = (1..=degree as i32)
         .flat_map(|x: i32| (1..=degree).map(move |y| y.pow(x as u32)))
         .map(|x| x as f32)
         .collect::<Vec<_>>();
-    let mt = DMatrix::from_vec(degree as usize, degree as usize, vals);
+    let mut augmenter: Vec<f32> = q[0..degree as usize].to_vec();
+    vals.append(&mut augmenter);
+    let mut mt = DMatrix::from_vec(degree as usize, degree + 1 as usize, vals);
 
     println!("{}", mt);
   
-    println!("{:?}", rref(& mutmt));
+    println!("{}", rref(&mut mt));
+
 }
 
-fn vec_homogeneous(v: &Vec<i32>) -> bool {
+fn vec_homogeneous(v: &Vec<f32>) -> bool {
     return v.iter().all(|&x| x == v[0]);
     //.all predicates truth, .any uses false
 }
 
-fn diff(v: &Vec<i32>) -> Vec<i32> {
+fn diff(v: &Vec<f32>) -> Vec<f32> {
     return v[1..]
         .iter()
         .enumerate()
@@ -49,7 +52,7 @@ fn diff(v: &Vec<i32>) -> Vec<i32> {
         .collect::<Vec<_>>();
 }
 
-fn rref(matrix: &DMatrix<f32>) -> &DMatrix<f32> {
+fn rref(matrix: &mut DMatrix<f32>) -> &DMatrix<f32> {
     let matrix_out = matrix;
     let mut pivot = 0;
     let row_count = matrix_out.nrows();
@@ -59,6 +62,7 @@ fn rref(matrix: &DMatrix<f32>) -> &DMatrix<f32> {
         if column_count <= pivot {
             break;
         }
+        
         let mut i = r;
 
         while matrix_out[(i, pivot)] == 0.0 {
@@ -73,21 +77,32 @@ fn rref(matrix: &DMatrix<f32>) -> &DMatrix<f32> {
             }
         }
         for j in 0..row_count {
+            println!("before: {}", matrix_out);
             let temp = matrix_out[(r,j)];
             matrix_out[(r,j)] = matrix_out[(i,j)];
             matrix_out[(i,j)] = temp;
+            println!("after: {}", matrix_out);
         }
         let divisor = matrix_out[(r,pivot)];
+        
         if divisor != 0.0 {
             for j in 0..column_count {
+                //this part takes the divisor and divides the whole row by it 
+                //thhe pivot travels diagonally down the matrix 
+                println!("dividing {} by {}",matrix_out[(r,j)], divisor);
                 matrix_out[(r,j)] = matrix_out[(r,j)] / divisor;
+                println!("to get {}", matrix_out);
+                
             }
         }
         for j in 0..row_count {
             if j != r {
                 let hold = matrix_out[(j,pivot)];
+                println!("{}", matrix_out);
                 for k in 0..column_count {
+                    println!("subtracting {} from {} and {} multiplied", matrix_out[(j,k)], hold, matrix_out[(r,k)]);
                     matrix_out[(j,k)] = matrix_out[(j,k)] - ( hold * matrix_out[(r,k)]);
+                    println!("to get {}", matrix_out);
                 }
             }
         }
