@@ -34,8 +34,8 @@ fn main() {
     println!("{}", mt);
     println!("{}", mt[(0, 0)]);
 
-
-    println!("{:?}", rref(mt));
+  
+    println!("{:?}", rref(&mt));
 
     //rref(mt);
 }
@@ -53,58 +53,51 @@ fn diff(v: &Vec<i32>) -> Vec<i32> {
         .collect::<Vec<_>>();
 }
 
-fn rref(mut mtx: DMatrix<f32>) -> &'static&'static mut DMatrix<f32> {
-    //declare a new matrix to operate on
-    //the old matrix is left unchanged
-
-    let result = &mut mtx;
-
-    let mut lead = 0;
-    let row_count = result.nrows();
-    let column_count = result.ncols();
-
+fn rref(matrix: &DMatrix<f32>) -> &DMatrix<f32> {
+    let mut aab = matrix;
+    let mut b = &mut aab;
+    let mut matrix_out: &mut DMatrix<f32> = b;
+    let mut pivot = 0;
+    let row_count = matrix_out.nrows();
+    let column_count = matrix_out.ncols();
+ 
     for r in 0..row_count {
-        if column_count <= lead {
+        if column_count <= pivot {
             break;
         }
-
         let mut i = r;
 
-        while result[(i, lead)] == 0.0 {
-            i += 1;
-
-            if row_count == i {
+        while matrix_out[(i, pivot)] == 0.0 {
+            i = i+1;
+            if i == row_count {
                 i = r;
-                if column_count == lead {
+                pivot = pivot + 1;
+                if column_count == pivot {
+                    pivot = pivot - 1;
                     break;
                 }
             }
         }
         for j in 0..row_count {
-            let temp = result[(r, j)];
-            result[(r, j)] = result[(i, j)];
-            result[(i, j)] = temp;
+            let temp = matrix_out[(r,j)];
+            matrix_out[(r,j)] = matrix_out[(i,j)];
+            matrix_out[(i,j)] = temp;
         }
-
-        let divisor = result[(r, lead)];
-
+        let divisor = matrix_out[(r,pivot)];
         if divisor != 0.0 {
             for j in 0..column_count {
-                result[(r, j)] = result[(r, j)] / divisor;
+                matrix_out[(r,j)] = matrix_out[(r,j)] / divisor;
             }
         }
-
         for j in 0..row_count {
             if j != r {
-                let hold = result[(j, lead)];
+                let hold = matrix_out[(j,pivot)];
                 for k in 0..column_count {
-                    result[(j, k)] = result[(j, k)] - (hold * result[(r, k)]);
+                    matrix_out[(j,k)] = matrix_out[(j,k)] - ( hold * matrix_out[(r,k)]);
                 }
             }
         }
-
-        lead += 1
+        pivot = pivot + 1;
     }
-
-    return &result;
+    matrix_out
 }
