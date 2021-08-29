@@ -5,7 +5,6 @@ fn main() {
 
     let mut prev = diff(&q);
     let mut next = diff(&q);
-//test
     let mut j = 0;
 
     let degree = loop {

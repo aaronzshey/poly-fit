@@ -1,0 +1,1 @@
+{"rustc":17807758859236181817,"features":"[]","target":9594881031858053733,"profile":1144844575097113612,"path":1036222786711178230,"deps":[[16023042641957633920,"nalgebra",false,2239916807861999438]],"local":[{"CheckDepInfo":{"dep_info":"debug/.fingerprint/poly-fit-fa2720adb800e5fa/dep-bin-poly-fit"}}],"rustflags":[],"metadata":4729278003419384539,"config":0,"compile_kind":0}
