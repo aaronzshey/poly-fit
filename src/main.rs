@@ -34,8 +34,8 @@ fn main() {
     println!("{}", mt);
     println!("{}", mt[(0, 0)]);
 
-    let mut operator = mt;
-    println!("{:?}", rref(operator));
+
+    println!("{:?}", rref(mt));
 
     //rref(mt);
 }
@@ -53,19 +53,19 @@ fn diff(v: &Vec<i32>) -> Vec<i32> {
         .collect::<Vec<_>>();
 }
 
-fn rref(mut mtx: DMatrix<f32>) -> DMatrix<f32> {
+fn rref(mut mtx: DMatrix<f32>) -> () {
     //declare a new matrix to operate on
     //the old matrix is left unchanged
 
     let result = &mut mtx;
 
-    let lead = 0;
+    let mut lead = 0;
     let row_count = result.nrows();
     let column_count = result.ncols();
 
     for r in 0..row_count {
         if column_count <= lead {
-            return;
+            break;
         }
 
         let mut i = r;
@@ -76,7 +76,7 @@ fn rref(mut mtx: DMatrix<f32>) -> DMatrix<f32> {
             if row_count == i {
                 i = r;
                 if column_count == lead {
-                    return;
+                    break;
                 }
             }
         }
@@ -106,5 +106,5 @@ fn rref(mut mtx: DMatrix<f32>) -> DMatrix<f32> {
         lead += 1
     }
 
-    return result;
+    result;
 }
