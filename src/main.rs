@@ -110,3 +110,17 @@ fn rref(matrix: &mut DMatrix<f32>) -> &DMatrix<f32> {
     }
     matrix_out
 }
+
+/*
+use nalgebra::Matrix3;
+use nalgebra::Matrix3x1;
+
+
+fn main() {
+    let mt = Matrix3::from_vec( [7.0, 14.0, -7.0, -2.0, -7.0, 11.0, 1.0, -3.0, 18.0].to_vec());
+    let sols = Matrix3x1::from_vec( [12.0,17.0,5.0].to_vec() );
+    println!("{}", mt);
+    println!("{}", mt.lu().solve(&sols).unwrap());
+}
+
+*/
